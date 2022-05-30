@@ -40,5 +40,5 @@ To run the tests, go to to Command Prompt (Windows) or Bash (Mac) run (verify th
 ```
 mvn clean test
 ```
-Screenshots with Pass/Fail results can be found on /resources/screenshots
-Basic reports can be found on /target/surefire-reports/index.html
+- Screenshots with Pass/Fail results can be found on /resources/screenshots
+- Basic reports can be found on /target/surefire-reports/index.html
