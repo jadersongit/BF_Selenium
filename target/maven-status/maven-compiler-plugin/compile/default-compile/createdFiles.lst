@@ -1,4 +1,5 @@
-pageObjects/TasksListPage.class
-pageObjects/CreateTaskPage.class
-pageObjects/PageBase.class
-utils/JsonReader.class
+pages/PostPage.class
+pages/BlogPage.class
+pages/PageBase.class
+utils/NavigationManager.class
+pages/HomePage.class

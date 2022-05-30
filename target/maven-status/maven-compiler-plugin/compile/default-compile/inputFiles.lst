@@ -1,4 +1,5 @@
-/Users/jadersonrg/Automation/src/main/java/utils/JsonReader.java
-/Users/jadersonrg/Automation/src/main/java/pageObjects/TasksListPage.java
-/Users/jadersonrg/Automation/src/main/java/pageObjects/PageBase.java
-/Users/jadersonrg/Automation/src/main/java/pageObjects/CreateTaskPage.java
+/Users/jadersonrg/Blankfactor/src/main/java/pages/PostPage.java
+/Users/jadersonrg/Blankfactor/src/main/java/pages/HomePage.java
+/Users/jadersonrg/Blankfactor/src/main/java/pages/PageBase.java
+/Users/jadersonrg/Blankfactor/src/main/java/pages/BlogPage.java
+/Users/jadersonrg/Blankfactor/src/main/java/utils/NavigationManager.java

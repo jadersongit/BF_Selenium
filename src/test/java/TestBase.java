@@ -1,41 +1,72 @@
-import java.net.MalformedURLException;
-import java.net.URL;
+/* 
+Test Base
+All the main methods listed to interact with the WebDriver from Selenium, as setting up 
+and tearing down the driver, initializing Navigation Manager and recording screenshots for Fail results
+*/
 
-import org.openqa.selenium.remote.DesiredCapabilities;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.ios.IOSDriver;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import com.google.common.io.Files;
+
+import pages.HomePage;
+import utils.NavigationManager;
 
 public class TestBase {
-    public static AppiumDriver driver;
+    WebDriver driver;
+    HomePage homePage;
 
-    public static void Android_setUp(String port, String deviceName, String platformVersion, String udid) throws MalformedURLException{
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("plataformName", "Android");
-        caps.setCapability("platformVersion", platformVersion);
-        caps.setCapability("deviceName", deviceName);
-        caps.setCapability("udid", udid);
-        caps.setCapability("app", System.getProperty("user.dir")+"/apps/ToDoApp.apk");
-        //in case is necessary to keep previous data and no need to re-install the app:
-        //remove "app" above;
-        //use appPackage and appActivity;
-        //or use "setCapability with "noReset"
-        driver = new AndroidDriver<>(new URL("http://localhost:"+port+"/wd/hub"), caps);
+    //Initialize WebDriver, opens the browser, go to the landing page and maxmize the window before all the tests
+    @BeforeClass
+    public void setUp(){
+        System.setProperty("webdriver.chrome.driver", "resources/chromedriver");
+        driver = new ChromeDriver();
+        driver.get("https://blankfactor.com/");
+        driver.manage().window().maximize();
+        homePage = new HomePage(driver);
     }
 
-    public void iOS_setUp() throws MalformedURLException{
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("plataformName", "iOS");
-        caps.setCapability("platformVersion", "15.2");
-        caps.setCapability("deviceName", "iPhone 12 Pro");
-        caps.setCapability("app", System.getProperty("user.dir")+"/apps/UIKitCatalog.app");
-        driver = new IOSDriver<>(new URL("http://localhost:4723/wd/hub"), caps);
-    }
-
-    public static void tearDown(){
+    //Tear down the WebDriver, closes the browser after all tests are done
+    @AfterClass
+    public void tearDown(){
         if (null != driver){
             driver.quit();
+        }
+    }
+
+    public NavigationManager navigation(){
+        return new NavigationManager(driver);
+    }
+
+    //Method to get screenshots from each Fail/Pass result
+    @AfterMethod
+    public void recordResults(ITestResult result){
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        TakesScreenshot camera = (TakesScreenshot)driver;
+        File screenshot = camera.getScreenshotAs(OutputType.FILE);
+        if(ITestResult.FAILURE == result.getStatus()){
+            try {
+                Files.move(screenshot, new File("resources/screenshots/Fail_"+result.getName()+"_"+formatter.format(date)+".png"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else if(ITestResult.SUCCESS == result.getStatus()){
+            try {
+                Files.move(screenshot, new File("resources/screenshots/Pass_"+result.getName()+"_"+formatter.format(date)+".png"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
